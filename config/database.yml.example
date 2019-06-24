@@ -1,0 +1,15 @@
+mysql:
+  development:
+    host: ""
+    user: ""
+    password: ""
+    dbname: ""
+    charset: ""
+    driver: "pdo_mysql"
+  production:
+    host: ""
+    user: ""
+    password: ""
+    dbname: ""
+    charset: ""
+    driver: "pdo_mysql"
