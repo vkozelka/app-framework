@@ -1,37 +1,41 @@
 <?php
 namespace App\System;
 
-use Doctrine\DBAL\DriverManager;
-use Doctrine\ORM\EntityManager;
+use Illuminate\Database\Capsule\Manager;
+use Illuminate\Database\Connection;
 
 class Database {
 
     /**
-     * @var \Doctrine\DBAL\Connection
+     * @var Manager
      */
-    private $__connection;
+    private Manager $connectionManager;
 
+    /**
+     * @var string
+     */
+    private string $connectionName = "mysql";
+
+    /**
+     * Database constructor.
+     * @throws Config\Exception\ConfigFileNotFoundException
+     */
     public function __construct()
     {
-        App::get()->getProfiler()->start("App::Database::Init");
-        $config = App::get()->getConfig()->getConfigValues("database")["mysql"][App::get()->getEnvironment()];
-        $this->__connection = DriverManager::getConnection($config);
-        App::get()->getProfiler()->stop("App::Database::Init");
+        App::get()->profiler->start("App::Database::Init");
+        $config = App::get()->config->getConfigValues("database")[$this->connectionName][App::di()->environment];
+        $this->connectionManager = new Manager();
+        $this->connectionManager->addConnection($config, $this->connectionName);
+        $this->connectionManager->bootEloquent();
+        App::get()->profiler->stop("App::Database::Init");
     }
 
     /**
-     * @return \Doctrine\DBAL\Connection
+     * @return Connection
      */
-    public function getConnection()
+    public function getConnection() : Connection
     {
-        return $this->__connection;
-    }
-
-    /**
-     * @return \Doctrine\DBAL\Query\QueryBuilder
-     */
-    public function createQueryBuilder() {
-        return $this->getConnection()->createQueryBuilder();
+        return $this->connectionManager->getConnection($this->connectionName);
     }
 
 }

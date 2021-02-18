@@ -4,7 +4,6 @@ namespace App\System;
 
 use App\System\Router\RouteNotFoundException;
 use App\System\Router\RouteWithoutPathException;
-use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
@@ -14,109 +13,111 @@ use Symfony\Component\Routing\RouteCollection;
 final class Router extends RouteCollection
 {
 
-    /**
-     * @var array
-     */
-    private $__routes = [];
+    private array $routes;
+
+    private ?array $matchedRoute = null;
 
     /**
-     * @var array
+     * Router constructor.
+     * @throws Config\Exception\ConfigFileNotFoundException
+     * @throws RouteWithoutPathException
      */
-    private $__config = [];
-
-    /**
-     * @var null|ParameterBag
-     */
-    private $__matchedRoute = null;
-
     public function __construct()
     {
-        $this->__getRouterConfig();
-        $this->__prepareRouter();
+        $this->routes = $this->getRouterConfig();
+        $this->prepareRouter();
     }
 
-    public function match()
+    /**
+     * @return bool
+     * @throws Config\Exception\ConfigFileNotFoundException
+     * @throws RouteNotFoundException
+     */
+    public function match(): bool
     {
-        App::get()->getProfiler()->start("App::Routing");
+        App::get()->profiler->start("App::Routing");
 
-        $context = (new RequestContext())->fromRequest(App::get()->getRequest());
-        $config = App::get()->getConfig()->getConfigValues("system")["system"][App::get()->getEnvironment()];
+        $context = (new RequestContext())->fromRequest(App::get()->request);
+        $config = App::get()->config->getConfigValues("system")["system"][App::di()->environment];
         $context->setBaseUrl($config["base_url"]);
 
         $matcher = new UrlMatcher($this, $context);
         try {
-            $this->__matchedRoute = $matcher->match($context->getPathInfo());
+            $this->matchedRoute = $matcher->match($context->getPathInfo());
             if ($this->wasMatched()) {
-                App::get()->getProfiler()->stop("App::Routing");
+                App::get()->profiler->stop("App::Routing");
                 return true;
             }
         } catch (ResourceNotFoundException $e) {
         }
 
         if ($this->hasRoute("_notFound")) {
-            $this->__matchedRoute = $matcher->match($this->getRoute("_notFound")["route"]);
+            $this->matchedRoute = $matcher->match($this->getRoute("_notFound")["route"]);
             if ($this->wasMatched()) {
-                App::get()->getProfiler()->stop("App::Routing");
+                App::get()->profiler->stop("App::Routing");
                 return true;
             }
         }
-        App::get()->getProfiler()->stop("App::Routing");
+        App::get()->profiler->stop("App::Routing");
         return false;
     }
 
-    public function getRoutes()
+    public function getRoutes() : array
     {
-        return $this->__routes;
+        return $this->routes;
     }
 
-    public function hasRoutes()
+    public function hasRoutes() : bool
     {
-        return count($this->getRoutes()) > 0 ? true : false;
+        return count($this->getRoutes()) > 0;
     }
 
-    public function hasRoute($name)
+    public function hasRoute(string $name) : bool
     {
-        return isset($this->__routes[$name]) ? true : false;
+        return isset($this->routes[$name]);
     }
 
-    public function getRoute($name)
+    /**
+     * @param string $name
+     * @return array
+     * @throws RouteNotFoundException
+     */
+    public function getRoute(string $name): array
     {
         if ($this->hasRoute($name)) {
-            return $this->__routes[$name];
+            return $this->routes[$name];
         }
         throw new RouteNotFoundException("Route " . $name . " not exists");
     }
 
-    public function wasMatched()
+    public function wasMatched(): bool
     {
-        return $this->__matchedRoute && !empty($this->__matchedRoute) ? true : false;
+        return $this->matchedRoute && !empty($this->matchedRoute);
     }
 
-    /**
-     * @return null|ParameterBag
-     */
-    public function getMatchedRoute()
+    public function getMatchedRoute(): ?array
     {
         if ($this->wasMatched()) {
-            return $this->__matchedRoute;
+            return $this->matchedRoute;
         }
         return null;
     }
 
     /**
-     * @throws Config\ConfigFileNotFoundException
+     * @return array
+     * @throws Config\Exception\ConfigFileNotFoundException
      */
-    private function __getRouterConfig()
+    private function getRouterConfig(): array
     {
-        $this->__routes = App::get()->getConfig()->getConfigValues("routes");
+        return App::get()->config->getConfigValues("routes");
     }
 
     /**
      * @throws RouteWithoutPathException
      */
-    private function __prepareRouter()
+    private function prepareRouter(): void
     {
-        App::get()->getProfiler()->start("App::Routing::Init");
+        App::get()->profiler->start("App::Routing::Init");
         if ($this->hasRoutes()) {
             foreach ($this->getRoutes() as $routeName => $routeDefinition) {
                 $route = $routeDefinition["route"] ?: null;
@@ -131,7 +132,7 @@ final class Router extends RouteCollection
                 $this->add($routeName, new Route($route, $defaults, $requirements, $options));
             }
         }
-        App::get()->getProfiler()->stop("App::Routing::Init");
+        App::get()->profiler->stop("App::Routing::Init");
     }
 
 }

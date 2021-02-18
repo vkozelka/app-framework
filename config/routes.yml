@@ -1,0 +1,22 @@
+admin:
+  route: "/admin/{module}/{controller}/{action}/{params}"
+  defaults:
+    section: "admin"
+    module: "core"
+    controller: "index"
+    action: "index"
+    params:
+
+default:
+  route: "/{module}/{controller}/{action}/{params}"
+  defaults:
+    section: "frontend"
+    module: "core"
+    controller: "index"
+    action: "index"
+    params:
+
+_notFound:
+  route: "/core/error/error404"
+  defaults:
+    section: "frontend"

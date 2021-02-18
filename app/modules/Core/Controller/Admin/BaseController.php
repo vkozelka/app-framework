@@ -6,12 +6,4 @@ use App\System\Mvc\Controller;
 
 class BaseController extends Controller {
 
-    protected $_needAdminLogged = true;
-
-    public function initialize() {
-        if ($this->_needAdminLogged === true && !App::get()->getAdminUser()) {
-            return $this->redirect("admin");
-        }
-    }
-
 }

@@ -1,16 +1,15 @@
 <?php
 namespace App\System;
 
-use Symfony\Component\Cache\Simple\FilesystemCache;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 
-class Cache extends FilesystemCache {
+class Cache extends FilesystemAdapter {
 
     public function __construct(string $namespace = '', int $defaultLifetime = 0, string $directory = null)
     {
-        App::get()->getProfiler()->start("App::Cache::init");
+        App::get()->profiler->start("App::Cache::init");
         parent::__construct($namespace, $defaultLifetime, $directory);
-        App::get()->getProfiler()->stop("App::Cache::init");
+        App::get()->profiler->stop("App::Cache::init");
     }
-
 
 }

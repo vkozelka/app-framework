@@ -12,61 +12,38 @@ class Controller {
     const FLASH_INFO = "info";
     const FLASH_ERROR = "danger";
 
-    public function __construct()
-    {
-    }
-
-    /**
-     * @return View
-     */
-    public function getView()
-    {
-        return App::get()->getView();
-    }
-
-    /**
-     * @return \Symfony\Component\HttpFoundation\Request
-     */
-    public function getRequest()
-    {
-        return App::get()->getRequest();
-    }
-
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function getResponse()
-    {
-        return App::get()->getResponse();
-    }
-
-    public function apiResponse($success = true, $data = []) {
+    protected function apiResponse($success = true, $data = []): Response {
         $data["success"] = $success;
         $code = 200;
         if (isset($data["code"])) {
             $code = $data["code"];
         }
-        return (new JsonResponse($data, $code));
+
+        $data["profiler"] = App::get()->outputProfiler(true);
+
+        $response = new JsonResponse($data, $code);
+        $response->headers->add(['content-type' => 'application/json']);
+        return $response;
     }
 
-    public function exitApplication(Response $response) {
+    protected function exitApplication(Response $response) : void {
         $response->sendHeaders();
         $response->sendContent();
         exit;
     }
 
-    public function getRouteParam($key, $default = null)
+    protected function getRouteParam($key, $default = null) : ?string
     {
-        $routeParams = App::get()->getRouter()->getMatchedRoute();
+        $routeParams = App::get()->router->getMatchedRoute();
         return isset($routeParams[$key]) ? $routeParams[$key] : $default;
     }
 
-    public function redirect(string $routeName, array $routeParams = []) {
-        return new RedirectResponse(App::get()->getUrl()->generate($routeName, $routeParams));
+    protected function redirect(string $routeName, array $routeParams = []): RedirectResponse {
+        return new RedirectResponse(App::get()->url->generate($routeName, $routeParams));
     }
 
-    public function flash(string $message, string $type = "success") {
-        App::get()->getSession()->getFlashBag()->set($type, $message);
+    protected function flash(string $message, string $type = "success"): void {
+        App::get()->session->getFlashBag()->set($type, $message);
     }
 
 }

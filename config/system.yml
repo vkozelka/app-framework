@@ -1,0 +1,5 @@
+system:
+  development:
+    base_url: "http://www.app-framework.loc/"
+  production:
+    base_url: "http://www.app-framework.loc/"
