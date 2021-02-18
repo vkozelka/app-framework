@@ -1,23 +1,27 @@
 {
     "require": {
-        "symfony/http-foundation": "^4.1",
-        "symfony/routing": "^4.1",
-        "symfony/config": "^4.1",
-        "symfony/yaml": "^4.1",
-        "symfony/templating": "^4.1",
-        "twig/twig": "^2.5",
-        "symfony/stopwatch": "^4.1",
-        "symfony/translation": "^4.1",
         "ext-pdo": "*",
         "ext-json":  "*",
-        "symfony/cache": "^4.1",
-        "symfony/form": "^4.1",
-        "symfony/security": "^4.1",
-        "symfony/validator": "^4.1",
-        "symfony/twig-bridge": "^4.1",
-        "doctrine/dbal":  "^2.8",
-        "doctrine/orm": "^2.6",
-        "swiftmailer/swiftmailer": "^6.1"
+        "php": ">=7.4",
+        "symfony/dependency-injection": "^5.2.3",
+        "symfony/http-foundation": "^5.2.3",
+        "symfony/routing": "^5.2.3",
+        "symfony/config": "^5.2.3",
+        "symfony/yaml": "^5.2.3",
+        "symfony/templating": "^5.2.3",
+        "twig/twig": "^v3.3.0",
+        "symfony/stopwatch": "^5.2.3",
+        "symfony/translation": "^5.2.3",
+        "symfony/cache": "^5.2.3",
+        "symfony/form": "^5.2.3",
+        "symfony/security-http": "^5.2.3",
+        "symfony/security-guard": "^5.2.3",
+        "symfony/security-csrf": "^5.2.3",
+        "symfony/security-core": "^5.2.3",
+        "symfony/validator": "^5.2.3",
+        "symfony/twig-bridge": "^5.2.3",
+        "illuminate/database": "v8.28.1",
+        "swiftmailer/swiftmailer": "^v6.2.5"
     },
     "autoload": {
         "psr-4": {
@@ -26,8 +30,9 @@
         }
     },
     "require-dev": {
-        "phpstan/phpstan": "^0.11.8",
-        "phpmetrics/phpmetrics": "^2.4",
-        "squizlabs/php_codesniffer": "*"
+        "phpmetrics/phpmetrics": "^v2.7.4"
+    },
+    "scripts": {
+        "metrics": "phpmetrics --report-html=./www/metrics ./app"
     }
 }

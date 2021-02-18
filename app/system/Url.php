@@ -2,46 +2,37 @@
 
 namespace App\System;
 
-use App\System\Router\RouteNotFoundException;
-use App\System\Router\RouteWithoutPathException;
-use Symfony\Component\HttpFoundation\ParameterBag;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGenerator;
-use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
-use Symfony\Component\Routing\Route;
-use Symfony\Component\Routing\RouteCollection;
 
+/**
+ * Class Url
+ * @package App\System
+ */
 final class Url
 {
 
-    /**
-     * @var array
-     */
-    private $__routes = [];
+    private UrlGenerator $generator;
 
     /**
-     * @var UrlGenerator
+     * Url constructor.
+     * @param Router $router
+     * @throws Config\Exception\ConfigFileNotFoundException
      */
-    private $__generator;
-
     public function __construct(Router $router)
     {
-        $context = (new RequestContext())->fromRequest(App::get()->getRequest());
-        $config = App::get()->getConfig()->getConfigValues("system")["system"][App::get()->getEnvironment()];
+        $context = (new RequestContext())->fromRequest(App::get()->request);
+        $config = App::get()->config->getConfigValues("system")["system"][App::di()->environment];
         $context->setBaseUrl(trim($config["base_url"],"/"));
 
-        $this->__generator = new UrlGenerator($router, $context);
+        $this->generator = new UrlGenerator($router, $context);
     }
 
-    /**
-     * @return UrlGenerator
-     */
-    public function getGenerator() {
-        return $this->__generator;
+    public function getGenerator(): UrlGenerator {
+        return $this->generator;
     }
 
-    public function generate($name, array $parameters = [], $referenceType = UrlGenerator::ABSOLUTE_PATH) {
+    public function generate($name, array $parameters = [], $referenceType = UrlGenerator::ABSOLUTE_PATH) : string {
         return $this->getGenerator()->generate($name, $parameters, $referenceType);
     }
 

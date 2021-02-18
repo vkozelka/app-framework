@@ -10,8 +10,8 @@ services:
       - .:/srv/app/
 
   db:
-    image: mysql:5.7
-    container_name: dewaarde_mysql
+    image: mysql:8
+    container_name: app_mysql
     volumes:
        - ./database:/var/lib/mysql
     restart: always
@@ -19,9 +19,9 @@ services:
       - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: dewaarde
-      MYSQL_USER: dewaarde
-      MYSQL_PASSWORD: dewaarde
+      MYSQL_DATABASE: appframework
+      MYSQL_USER: appfw
+      MYSQL_PASSWORD: appfwPass
 
   app-db:
     build:

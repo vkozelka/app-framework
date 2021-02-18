@@ -1,4 +1,7 @@
 <?php
+
+use App\System\App;
+
 if (isset($_SERVER['HTTP_ORIGIN'])) {
     header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
     header('Access-Control-Allow-Credentials: true');
@@ -13,6 +16,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     }
     exit(0);
 }
+
+ini_set("display_errors","on");
 
 define("DS", DIRECTORY_SEPARATOR);
 define("CMS_DIR_WWW", __DIR__);
@@ -31,12 +36,17 @@ define("CMS_DIR_VAR_SESSION", CMS_DIR_VAR . DS . "sessions");
 
 require_once CMS_DIR_VENDOR . DS . "autoload.php";
 
-$app = \App\System\App::get();
-
-$app->getProfiler()->start("App");
-echo $app->run();
-$app->getProfiler()->stop("App");
-
-//if ("development" === $app->getEnvironment()) {
-//    $app->outputProfiler();
-//}
+ini_set("memory_limit", "512M");
+try {
+    $app = App::get();
+    $app->profiler->start("App");
+    echo $app->run();
+    $app->profiler->stop("App");
+} catch (Exception $ex) {
+    echo "<h1>Exception</h1><h2>".$ex->getMessage()."</h2><pre>".$ex->getTraceAsString()."</pre>";
+} catch (Error $e) {
+    echo "<h1>".get_class($e)."</h1><h2>".$e->getMessage()."</h2><pre>".$e->getTraceAsString()."</pre>";
+}
+if ("development" === $app->getDiContainer()->environment) {
+    // $app->outputProfiler();
+}

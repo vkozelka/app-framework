@@ -1,0 +1,15 @@
+mysql:
+  development:
+    driver: "mysql"
+    host: "db"
+    database: "appframework"
+    username: "appfw"
+    password: "appfwPass"
+    charset: "utf8"
+  production:
+    driver: "mysql"
+    host: ""
+    database: ""
+    username: ""
+    password: ""
+    charset: ""

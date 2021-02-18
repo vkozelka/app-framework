@@ -1,51 +1,63 @@
 <?php
 namespace App\System;
 
-use App\System\Form\FieldsNotProvidedException;
-use App\System\Form\ValidatorsNotProvidedException;
+use App\System\Form\Exception\FieldsNotProvidedException;
+use App\System\Form\Exception\ValidatorsNotProvidedException;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\Validation;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class Form {
 
-    private $__errors = [];
+    private array $errors = [];
 
     /**
-     * @var \Symfony\Component\Validator\Validator\ValidatorInterface
+     * @var ValidatorInterface
      */
-    private $__validator;
+    private ValidatorInterface $validator;
 
-    private $__data = [];
+    private array $data = [];
 
     public function __construct()
     {
-        $this->__validator = Validation::createValidator();
+        $this->validator = Validation::createValidator();
     }
 
     /**
-     * @return \Symfony\Component\Validator\Validator\ValidatorInterface
+     * @return ValidatorInterface
      */
-    private function getValidator() {
-        return $this->__validator;
+    private function getValidator(): ValidatorInterface {
+        return $this->validator;
     }
 
-    public function getFields() {
+    /**
+     * @throws FieldsNotProvidedException
+     */
+    public function getFields(): array {
         throw new FieldsNotProvidedException();
     }
 
-    public function getValidators() {
+    /**
+     * @throws ValidatorsNotProvidedException
+     */
+    public function getValidators(): array {
         throw new ValidatorsNotProvidedException();
     }
 
-    public function isValid(array $data = []) {
+    /**
+     * @return bool
+     * @throws FieldsNotProvidedException
+     * @throws ValidatorsNotProvidedException
+     */
+    public function isValid(): bool {
         $valid = true;
 
         foreach ($this->getFields() as $field) {
-            $value = App::get()->getRequest()->request->get($field, null);
+            $value = App::get()->request->request->get($field);
             if (isset($this->getValidators()[$field])) {
-                $this->__errors[$field] = $this->getValidator()->validate($value,$this->getValidators()[$field]);
-                if (count($this->__errors[$field])) {
+                $this->errors[$field] = $this->getValidator()->validate($value,$this->getValidators()[$field]);
+                if (count($this->errors[$field])) {
                     $valid = false;
                 }
             }
@@ -54,57 +66,72 @@ class Form {
         return $valid;
     }
 
-    public function addError($field, ConstraintViolation $error) {
-        $this->__errors[$field]->add($error);
+    public function addError($field, ConstraintViolation $error): void {
+        $this->errors[$field]->add($error);
     }
 
-    public function getErrors($field = null) {
+    public function getErrors($field = null): array {
         if (!$field) {
-            return $this->__errors;
+            return $this->errors;
         }
-        return $this->__errors[$field];
+        return $this->errors[$field];
     }
 
-    public function hasErrors($field = null) {
+    public function hasErrors($field = null): bool {
         if ($field) {
-            if (isset($this->__errors[$field]) && count($this->__errors[$field])) {
+            if (isset($this->errors[$field]) && count($this->errors[$field])) {
                 return true;
             } else {
                 return false;
             }
         } else {
             $count = 0;
-            foreach ($this->__errors as $field => $errors) {
+            foreach ($this->errors as $field => $errors) {
                 $count+= count($errors);
             }
-            return $count > 0 ? true : false;
+            return $count > 0;
         }
     }
 
-    public function getValues() {
+    /**
+     * @return array|ParameterBag
+     * @throws FieldsNotProvidedException
+     */
+    public function getValues(): array {
         $result = new ParameterBag();
         foreach ($this->getFields() as $field) {
-            $result->set($field, App::get()->getRequest()->request->get($field));
+            $result->set($field, App::get()->request->request->get($field));
         }
         return $result;
     }
 
-    public function setData(array $data = []) {
+    /**
+     * @param array $data
+     * @throws FieldsNotProvidedException
+     */
+    public function setData(array $data = []): void {
         foreach ($this->getFields() as $field) {
             if (isset($data[$field])) {
-                $this->__data[$field] = $data[$field];
+                $this->data[$field] = $data[$field];
             }
         }
-        return $data;
     }
 
-    public function hasData(string $field) {
-        return isset($this->__data[$field]) ? true : false;
+    /**
+     * @param string $field
+     * @return bool
+     */
+    public function hasData(string $field): bool {
+        return isset($this->data[$field]);
     }
 
-    public function getData(string $field) {
+    /**
+     * @param string $field
+     * @return string|null
+     */
+    public function getData(string $field): ?string {
         if ($this->hasData($field)) {
-            return $this->__data[$field];
+            return $this->data[$field];
         }
         return null;
     }

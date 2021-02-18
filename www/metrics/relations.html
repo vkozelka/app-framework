@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="css/roboto.css">
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/material-icons.css">
+    <link rel="stylesheet" href="css/graph-carousel.css">
 </head>
 <body>
 
@@ -47,11 +48,12 @@
 
 
 <div class="page">
-    <div class="content">
+    <div class="content content-first">
         <div class="report-details">
-            Created at 2019-06-05 12:18:19        , with PHPMetrics v2.4.1 (<a href="https://twitter.com/Halleck45">Jean-François Lépine</a>).
+            Created at 2021-02-18 15:11:41        , with PHPMetrics v2.7.4 (<a href="https://twitter.com/Halleck45">Jean-François Lépine</a>).
         </div>
 
+        
 
 
 <div class="row">
@@ -92,10 +94,16 @@
                             <path d="M0 0h24v24H0z" fill="none"/>
                             <path d="M20 8h-2.81c-.45-.78-1.07-1.45-1.82-1.96L17 4.41 15.59 3l-2.17 2.17C12.96 5.06 12.49 5 12 5c-.49 0-.96.06-1.41.17L8.41 3 7 4.41l1.62 1.63C7.88 6.55 7.26 7.22 6.81 8H4v2h2.09c-.05.33-.09.66-.09 1v1H4v2h2v1c0 .34.04.67.09 1H4v2h2.81c1.04 1.79 2.97 3 5.19 3s4.15-1.21 5.19-3H20v-2h-2.09c.05-.33.09-.66.09-1v-1h2v-2h-2v-1c0-.34-.04-.67-.09-1H20V8zm-6 8h-4v-2h4v2zm0-4h-4v-2h4v2z"/>
                         </svg>
-                        Violations (25)
+                        Violations (6)
                     </a>
                 </li>
-                                <li>
+                                    <li>
+                        <a href="composer.html">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px"><path d="M0 0h24v24H0z" fill="none"/><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>
+                            Composer
+                        </a>
+                    </li>
+                                                <li>
                     <a href="loc.html">
                         <svg fill="#FFFFFF" height="24" viewBox="0 0 24 24" width="24"
                              xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -219,12 +227,14 @@
 <script type="text/javascript" src="js/d3.hexbin.v0.js"></script>
 <script type="text/javascript" src="js/sort-table.min.js"></script>
 <script type="text/javascript" src="js/graph-maintainability.js"></script>
+<script type="text/javascript" src="js/graph-carousel.js"></script>
 <script type="text/javascript" src="js/graph-licenses.js"></script>
+<script type="text/javascript" src="js/FileSaver.min.js"></script>
 
 <script src="js/clusterize.min.js"></script>
 <link rel="stylesheet" href="css/clusterize.css">
 
-<script type="text/javascript" src="js/classes.js"></script>
+<script type="text/javascript" src="classes.js"></script>
 
 <script type="text/javascript">
     var accessibilityEnabled = false;
@@ -239,14 +249,224 @@
 
     var relations = [
     {
-        "name": "\\App\\System\\Email",
+        "name": "\\App\\Module\\Core\\Controller\\Admin\\BaseController",
+        "size": 3000,
+        "relations": [
+            "\\App\\System\\Mvc\\Controller"
+        ]
+    },
+    {
+        "name": "\\App\\System\\Mvc\\Controller",
+        "size": 3000,
+        "relations": [
+            "\\Symfony\\Component\\HttpFoundation\\Response",
+            "\\Symfony\\Component\\HttpFoundation\\JsonResponse",
+            "\\App\\System\\App",
+            "\\Symfony\\Component\\HttpFoundation\\RedirectResponse"
+        ]
+    },
+    {
+        "name": "\\App\\Module\\Core\\Controller\\Frontend\\BaseController",
         "size": 3000,
         "relations": []
+    },
+    {
+        "name": "\\App\\Module\\Core\\Controller\\Frontend\\ErrorController",
+        "size": 3000,
+        "relations": [
+            "\\App\\Module\\Core\\Controller\\Frontend\\BaseController"
+        ]
+    },
+    {
+        "name": "\\App\\Module\\Core\\Controller\\Frontend\\IndexController",
+        "size": 3000,
+        "relations": [
+            "\\App\\Module\\Core\\Controller\\Frontend\\BaseController",
+            "\\App\\System\\App"
+        ]
     },
     {
         "name": "\\App\\System\\App",
         "size": 3000,
         "relations": []
+    },
+    {
+        "name": "\\App\\System\\App\\Exception\\ActionNotFoundException",
+        "size": 3000,
+        "relations": []
+    },
+    {
+        "name": "\\Exception",
+        "size": 3000,
+        "relations": []
+    },
+    {
+        "name": "\\App\\System\\App\\Exception\\BlockNotFoundException",
+        "size": 3000,
+        "relations": []
+    },
+    {
+        "name": "\\App\\System\\App\\Exception\\ControllerNotFoundException",
+        "size": 3000,
+        "relations": []
+    },
+    {
+        "name": "\\App\\System\\DiContainer",
+        "size": 3000,
+        "relations": [
+            "\\Symfony\\Component\\DependencyInjection\\ContainerBuilder",
+            "\\Symfony\\Component\\DependencyInjection\\ParameterBag\\ParameterBagInterface",
+            "\\Symfony\\Component\\HttpFoundation\\Request",
+            "\\Symfony\\Component\\DependencyInjection\\Reference"
+        ]
+    },
+    {
+        "name": "\\App\\System\\Filesystem",
+        "size": 3000,
+        "relations": [
+            "\\App\\System\\Filesystem\\Exception\\DirectoryNotWritableException"
+        ]
+    },
+    {
+        "name": "\\App\\System\\Block",
+        "size": 3000,
+        "relations": [
+            "\\App\\System\\App"
+        ]
+    },
+    {
+        "name": "\\App\\System\\Cache",
+        "size": 3000,
+        "relations": [
+            "\\Symfony\\Component\\Cache\\Adapter\\FilesystemAdapter",
+            "\\App\\System\\App"
+        ]
+    },
+    {
+        "name": "\\Symfony\\Component\\Cache\\Adapter\\FilesystemAdapter",
+        "size": 3000,
+        "relations": []
+    },
+    {
+        "name": "\\App\\System\\Cli\\Exception\\TooMuchArgumentsException",
+        "size": 3000,
+        "relations": [
+            "\\Exception"
+        ]
+    },
+    {
+        "name": "\\App\\System\\Config\\Exception\\ConfigFileNotFoundException",
+        "size": 3000,
+        "relations": []
+    },
+    {
+        "name": "\\App\\System\\Config",
+        "size": 3000,
+        "relations": [
+            "\\Symfony\\Component\\Config\\FileLocator",
+            "\\App\\System\\App",
+            "\\App\\System\\Config\\Exception\\ConfigFileNotFoundException",
+            "\\Symfony\\Component\\Yaml\\Yaml"
+        ]
+    },
+    {
+        "name": "\\Symfony\\Component\\Config\\FileLocator",
+        "size": 3000,
+        "relations": []
+    },
+    {
+        "name": "\\Symfony\\Component\\Yaml\\Yaml",
+        "size": 3000,
+        "relations": []
+    },
+    {
+        "name": "\\App\\System\\Database",
+        "size": 3000,
+        "relations": [
+            "\\App\\System\\App",
+            "\\Illuminate\\Database\\Capsule\\Manager",
+            "\\Illuminate\\Database\\Connection"
+        ]
+    },
+    {
+        "name": "\\Illuminate\\Database\\Capsule\\Manager",
+        "size": 3000,
+        "relations": []
+    },
+    {
+        "name": "\\Illuminate\\Database\\Connection",
+        "size": 3000,
+        "relations": []
+    },
+    {
+        "name": "\\Symfony\\Component\\DependencyInjection\\ContainerBuilder",
+        "size": 3000,
+        "relations": []
+    },
+    {
+        "name": "\\Symfony\\Component\\DependencyInjection\\ParameterBag\\ParameterBagInterface",
+        "size": 3000,
+        "relations": []
+    },
+    {
+        "name": "\\Symfony\\Component\\HttpFoundation\\Request",
+        "size": 3000,
+        "relations": []
+    },
+    {
+        "name": "\\Symfony\\Component\\DependencyInjection\\Reference",
+        "size": 3000,
+        "relations": []
+    },
+    {
+        "name": "\\App\\System\\Dispatcher",
+        "size": 3000,
+        "relations": [
+            "\\App\\System\\App",
+            "\\App\\System\\Mvc\\View",
+            "\\App\\System\\App\\Exception\\ControllerNotFoundException",
+            "\\fullControllerClass",
+            "\\App\\System\\Helper\\StringHelper",
+            "\\App\\System\\Mvc\\Controller",
+            "\\App\\System\\App\\Exception\\ActionNotFoundException",
+            "\\Exception"
+        ]
+    },
+    {
+        "name": "\\App\\System\\Mvc\\View",
+        "size": 3000,
+        "relations": [
+            "\\App\\System\\Mvc\\View\\Engine\\Twig",
+            "\\App\\System\\App",
+            "\\Twig\\Environment"
+        ]
+    },
+    {
+        "name": "\\fullControllerClass",
+        "size": 3000,
+        "relations": []
+    },
+    {
+        "name": "\\App\\System\\Helper\\StringHelper",
+        "size": 3000,
+        "relations": []
+    },
+    {
+        "name": "\\App\\System\\Email\\Exception\\EmailInvalidAdapterException",
+        "size": 3000,
+        "relations": []
+    },
+    {
+        "name": "\\App\\System\\Email",
+        "size": 3000,
+        "relations": [
+            "\\App\\System\\App",
+            "\\Swift_SendmailTransport",
+            "\\Swift_SmtpTransport",
+            "\\App\\System\\Email\\Exception\\EmailInvalidAdapterException",
+            "\\Swift_Mailer",
+            "\\Swift_Message"
+        ]
     },
     {
         "name": "\\Swift_SendmailTransport",
@@ -259,13 +479,6 @@
         "relations": []
     },
     {
-        "name": "\\App\\System\\Email\\EmailInvalidAdapterException",
-        "size": 3000,
-        "relations": [
-            "\\Exception"
-        ]
-    },
-    {
         "name": "\\Swift_Mailer",
         "size": 3000,
         "relations": []
@@ -276,162 +489,55 @@
         "relations": []
     },
     {
-        "name": "\\App\\System\\Form\\ValidatorsNotProvidedException",
+        "name": "\\App\\System\\Filesystem\\Exception\\DirectoryNotWritableException",
         "size": 3000,
         "relations": []
     },
     {
-        "name": "\\Exception",
+        "name": "\\App\\System\\Form\\Exception\\FieldsNotProvidedException",
         "size": 3000,
         "relations": []
     },
     {
-        "name": "\\App\\System\\Form\\FieldsNotProvidedException",
+        "name": "\\App\\System\\Form\\Exception\\ValidatorsNotProvidedException",
         "size": 3000,
         "relations": []
     },
     {
-        "name": "\\static",
-        "size": 3000,
-        "relations": []
-    },
-    {
-        "name": "\\Symfony\\Component\\Stopwatch\\Stopwatch",
-        "size": 3000,
-        "relations": []
-    },
-    {
-        "name": "\\App\\System\\Cache",
+        "name": "\\App\\System\\Form",
         "size": 3000,
         "relations": [
-            "\\Symfony\\Component\\Cache\\Simple\\FilesystemCache",
+            "\\Symfony\\Component\\Validator\\Validation",
+            "\\Symfony\\Component\\Validator\\Validator\\ValidatorInterface",
+            "\\App\\System\\Form\\Exception\\FieldsNotProvidedException",
+            "\\App\\System\\Form\\Exception\\ValidatorsNotProvidedException",
             "\\App\\System\\App",
-            "\\parent"
+            "\\Symfony\\Component\\Validator\\ConstraintViolation",
+            "\\Symfony\\Component\\HttpFoundation\\ParameterBag"
         ]
     },
     {
-        "name": "\\Symfony\\Component\\HttpFoundation\\Request",
+        "name": "\\Symfony\\Component\\Validator\\Validation",
         "size": 3000,
         "relations": []
     },
     {
-        "name": "\\Symfony\\Component\\HttpFoundation\\Session\\Session",
+        "name": "\\Symfony\\Component\\Validator\\Validator\\ValidatorInterface",
         "size": 3000,
         "relations": []
     },
     {
-        "name": "\\App\\System\\Translator",
+        "name": "\\Symfony\\Component\\Validator\\ConstraintViolation",
         "size": 3000,
-        "relations": [
-            "\\App\\System\\App",
-            "\\Symfony\\Component\\Translation\\Translator",
-            "\\Symfony\\Component\\Translation\\Loader\\YamlFileLoader",
-            "\\Symfony\\Component\\Translation\\Loader\\XliffFileLoader",
-            "\\DirectoryIterator"
-        ]
+        "relations": []
     },
     {
-        "name": "\\App\\System\\Config",
+        "name": "\\Symfony\\Component\\HttpFoundation\\ParameterBag",
         "size": 3000,
-        "relations": [
-            "\\Symfony\\Component\\Config\\FileLocator",
-            "\\App\\System\\App",
-            "\\App\\System\\Config\\ConfigFileNotFoundException",
-            "\\Symfony\\Component\\Yaml\\Yaml"
-        ]
+        "relations": []
     },
     {
         "name": "\\Symfony\\Component\\HttpFoundation\\Response",
-        "size": 3000,
-        "relations": []
-    },
-    {
-        "name": "\\App\\System\\Router",
-        "size": 3000,
-        "relations": [
-            "\\Symfony\\Component\\Routing\\RouteCollection",
-            "\\App\\System\\App",
-            "\\Symfony\\Component\\Routing\\RequestContext",
-            "\\Symfony\\Component\\Routing\\Matcher\\UrlMatcher",
-            "\\App\\System\\Router\\RouteNotFoundException",
-            "\\App\\System\\Router\\RouteWithoutPathException",
-            "\\Symfony\\Component\\Routing\\Route"
-        ]
-    },
-    {
-        "name": "\\App\\System\\Database",
-        "size": 3000,
-        "relations": [
-            "\\App\\System\\App",
-            "\\Doctrine\\DBAL\\DriverManager"
-        ]
-    },
-    {
-        "name": "\\App\\System\\Url",
-        "size": 3000,
-        "relations": [
-            "\\App\\System\\Router",
-            "\\Symfony\\Component\\Routing\\RequestContext",
-            "\\App\\System\\App",
-            "\\Symfony\\Component\\Routing\\Generator\\UrlGenerator"
-        ]
-    },
-    {
-        "name": "\\App\\Module\\User\\Model\\User",
-        "size": 3000,
-        "relations": [
-            "\\App\\System\\Mvc\\Model",
-            "\\App\\Module\\User\\Entity\\User",
-            "\\App\\Module\\User\\Model\\User\\Token",
-            "\\App\\Module\\User\\Model\\User\\Address",
-            "\\App\\Module\\User\\Model\\User\\Profile",
-            "\\App\\Module\\User\\Model\\User\\Group",
-            "\\App\\Module\\User\\Model\\User\\PhoneNumber",
-            "\\App\\Module\\User\\Model\\User\\Card",
-            "\\App\\System\\Pagination"
-        ]
-    },
-    {
-        "name": "\\App\\System\\App\\DirectoryNotWritableException",
-        "size": 3000,
-        "relations": [
-            "\\Exception"
-        ]
-    },
-    {
-        "name": "\\App\\System\\Mvc\\View",
-        "size": 3000,
-        "relations": [
-            "\\App\\System\\Mvc\\View\\Engine\\Twig",
-            "\\App\\System\\App"
-        ]
-    },
-    {
-        "name": "\\App\\System\\App\\ControllerNotFoundException",
-        "size": 3000,
-        "relations": [
-            "\\Exception"
-        ]
-    },
-    {
-        "name": "\\controllerClass",
-        "size": 3000,
-        "relations": []
-    },
-    {
-        "name": "\\App\\System\\App\\ActionNotFoundException",
-        "size": 3000,
-        "relations": [
-            "\\Exception"
-        ]
-    },
-    {
-        "name": "\\App\\System\\App\\BlockNotFoundException",
-        "size": 3000,
-        "relations": []
-    },
-    {
-        "name": "\\App\\System\\Mvc\\Controller",
         "size": 3000,
         "relations": []
     },
@@ -446,9 +552,26 @@
         "relations": []
     },
     {
-        "name": "\\App\\System\\Mvc\\Model",
+        "name": "\\App\\System\\Mvc\\Model\\Entity",
         "size": 3000,
         "relations": []
+    },
+    {
+        "name": "\\App\\System\\Mvc\\Model\\Exception\\RecordNotSavedException",
+        "size": 3000,
+        "relations": [
+            "\\Exception"
+        ]
+    },
+    {
+        "name": "\\App\\System\\Mvc\\Model",
+        "size": 3000,
+        "relations": [
+            "\\App\\System\\App",
+            "\\App\\System\\Pagination",
+            "\\App\\System\\Mvc\\Model\\Entity",
+            "\\App\\System\\Mvc\\Model\\RecordNotSavedException"
+        ]
     },
     {
         "name": "\\App\\System\\Pagination",
@@ -456,30 +579,12 @@
         "relations": []
     },
     {
-        "name": "\\App\\System\\Mvc\\Model\\Entity",
+        "name": "\\App\\System\\Mvc\\Model\\RecordNotSavedException",
         "size": 3000,
         "relations": []
     },
     {
-        "name": "\\App\\System\\Mvc\\Model\\RecordNotSavedException",
-        "size": 3000,
-        "relations": [
-            "\\Exception"
-        ]
-    },
-    {
         "name": "\\App\\System\\Mvc\\View\\Engine\\Twig",
-        "size": 3000,
-        "relations": [
-            "\\Symfony\\Component\\Templating\\EngineInterface",
-            "\\Twig_Loader_Filesystem",
-            "\\App\\System\\App",
-            "\\Twig_Environment",
-            "\\App\\System\\Mvc\\View\\Helper\\Cms"
-        ]
-    },
-    {
-        "name": "\\Symfony\\Component\\HttpFoundation\\ParameterBag",
         "size": 3000,
         "relations": []
     },
@@ -489,12 +594,12 @@
         "relations": []
     },
     {
-        "name": "\\Twig_Loader_Filesystem",
+        "name": "\\Twig\\Loader\\FilesystemLoader",
         "size": 3000,
         "relations": []
     },
     {
-        "name": "\\Twig_Environment",
+        "name": "\\Twig\\Environment",
         "size": 3000,
         "relations": []
     },
@@ -502,26 +607,22 @@
         "name": "\\App\\System\\Mvc\\View\\Helper\\Cms",
         "size": 3000,
         "relations": [
-            "\\Twig_Extension",
-            "\\Twig_Function",
+            "\\Twig\\Extension\\AbstractExtension",
+            "\\Twig\\TwigFunction",
             "\\App\\System\\App",
             "\\Symfony\\Component\\Validator\\ConstraintViolation",
-            "\\App\\System\\App\\BlockNotFoundException",
+            "\\App\\System\\Helper\\StringHelper",
+            "\\App\\System\\App\\Exception\\BlockNotFoundException",
             "\\blockClass"
         ]
     },
     {
-        "name": "\\Twig_Extension",
+        "name": "\\Twig\\Extension\\AbstractExtension",
         "size": 3000,
         "relations": []
     },
     {
-        "name": "\\Twig_Function",
-        "size": 3000,
-        "relations": []
-    },
-    {
-        "name": "\\Symfony\\Component\\Validator\\ConstraintViolation",
+        "name": "\\Twig\\TwigFunction",
         "size": 3000,
         "relations": []
     },
@@ -531,29 +632,64 @@
         "relations": []
     },
     {
-        "name": "\\Doctrine\\DBAL\\Query\\QueryBuilder",
+        "name": "\\App\\System\\Router\\Exception\\RouteNotFoundException",
+        "size": 3000,
+        "relations": [
+            "\\Exception"
+        ]
+    },
+    {
+        "name": "\\App\\System\\Router\\Exception\\RouteWithoutPathException",
+        "size": 3000,
+        "relations": [
+            "\\Exception"
+        ]
+    },
+    {
+        "name": "\\App\\System\\Router",
         "size": 3000,
         "relations": []
     },
     {
-        "name": "\\App\\System\\Config\\ConfigFileNotFoundException",
+        "name": "\\Symfony\\Component\\Routing\\RouteCollection",
         "size": 3000,
         "relations": []
     },
     {
-        "name": "\\Doctrine\\DBAL\\DriverManager",
+        "name": "\\Symfony\\Component\\Routing\\RequestContext",
         "size": 3000,
         "relations": []
     },
     {
-        "name": "\\Symfony\\Component\\Cache\\Simple\\FilesystemCache",
+        "name": "\\Symfony\\Component\\Routing\\Matcher\\UrlMatcher",
         "size": 3000,
         "relations": []
     },
     {
-        "name": "\\parent",
+        "name": "\\App\\System\\Router\\RouteNotFoundException",
         "size": 3000,
         "relations": []
+    },
+    {
+        "name": "\\App\\System\\Router\\RouteWithoutPathException",
+        "size": 3000,
+        "relations": []
+    },
+    {
+        "name": "\\Symfony\\Component\\Routing\\Route",
+        "size": 3000,
+        "relations": []
+    },
+    {
+        "name": "\\App\\System\\Translator",
+        "size": 3000,
+        "relations": [
+            "\\App\\System\\App",
+            "\\Symfony\\Component\\Translation\\Translator",
+            "\\Symfony\\Component\\Translation\\Loader\\YamlFileLoader",
+            "\\Symfony\\Component\\Translation\\Loader\\XliffFileLoader",
+            "\\DirectoryIterator"
+        ]
     },
     {
         "name": "\\Symfony\\Component\\Translation\\Translator",
@@ -576,464 +712,19 @@
         "relations": []
     },
     {
-        "name": "\\App\\System\\Cli\\TooMuchArgumentsException",
+        "name": "\\App\\System\\Url",
         "size": 3000,
         "relations": [
-            "\\Exception"
+            "\\App\\System\\Router",
+            "\\Symfony\\Component\\Routing\\RequestContext",
+            "\\App\\System\\App",
+            "\\Symfony\\Component\\Routing\\Generator\\UrlGenerator"
         ]
-    },
-    {
-        "name": "\\Symfony\\Component\\Config\\FileLocator",
-        "size": 3000,
-        "relations": []
-    },
-    {
-        "name": "\\Symfony\\Component\\Yaml\\Yaml",
-        "size": 3000,
-        "relations": []
-    },
-    {
-        "name": "\\Symfony\\Component\\Routing\\RequestContext",
-        "size": 3000,
-        "relations": []
     },
     {
         "name": "\\Symfony\\Component\\Routing\\Generator\\UrlGenerator",
         "size": 3000,
         "relations": []
-    },
-    {
-        "name": "\\App\\System\\Block",
-        "size": 3000,
-        "relations": [
-            "\\App\\System\\App"
-        ]
-    },
-    {
-        "name": "\\Symfony\\Component\\Routing\\RouteCollection",
-        "size": 3000,
-        "relations": []
-    },
-    {
-        "name": "\\Symfony\\Component\\Routing\\Matcher\\UrlMatcher",
-        "size": 3000,
-        "relations": []
-    },
-    {
-        "name": "\\App\\System\\Router\\RouteNotFoundException",
-        "size": 3000,
-        "relations": [
-            "\\Exception"
-        ]
-    },
-    {
-        "name": "\\App\\System\\Router\\RouteWithoutPathException",
-        "size": 3000,
-        "relations": [
-            "\\Exception"
-        ]
-    },
-    {
-        "name": "\\Symfony\\Component\\Routing\\Route",
-        "size": 3000,
-        "relations": []
-    },
-    {
-        "name": "\\App\\System\\Form",
-        "size": 3000,
-        "relations": [
-            "\\Symfony\\Component\\Validator\\Validation",
-            "\\App\\System\\Form\\FieldsNotProvidedException",
-            "\\App\\System\\Form\\ValidatorsNotProvidedException",
-            "\\App\\System\\App",
-            "\\Symfony\\Component\\Validator\\ConstraintViolation",
-            "\\Symfony\\Component\\HttpFoundation\\ParameterBag"
-        ]
-    },
-    {
-        "name": "\\Symfony\\Component\\Validator\\Validation",
-        "size": 3000,
-        "relations": []
-    },
-    {
-        "name": "\\App\\Module\\Core\\Entity\\Region",
-        "size": 3000,
-        "relations": [
-            "\\App\\System\\Mvc\\Model\\Entity"
-        ]
-    },
-    {
-        "name": "\\App\\Module\\Core\\Entity\\Country",
-        "size": 3000,
-        "relations": [
-            "\\App\\System\\Mvc\\Model\\Entity"
-        ]
-    },
-    {
-        "name": "\\App\\Module\\Core\\Entity\\Image",
-        "size": 3000,
-        "relations": []
-    },
-    {
-        "name": "\\App\\Module\\Core\\Controller\\Frontend\\ErrorController",
-        "size": 3000,
-        "relations": [
-            "\\App\\Module\\Core\\Controller\\Frontend\\BaseController"
-        ]
-    },
-    {
-        "name": "\\App\\Module\\Core\\Controller\\Frontend\\BaseController",
-        "size": 3000,
-        "relations": [
-            "\\App\\System\\Mvc\\Controller"
-        ]
-    },
-    {
-        "name": "\\App\\Module\\Core\\Controller\\Frontend\\IndexController",
-        "size": 3000,
-        "relations": [
-            "\\App\\Module\\Core\\Controller\\Frontend\\BaseController",
-            "\\App\\System\\App"
-        ]
-    },
-    {
-        "name": "\\App\\Module\\Core\\Controller\\Admin\\BaseController",
-        "size": 3000,
-        "relations": [
-            "\\App\\System\\Mvc\\Controller",
-            "\\App\\System\\App"
-        ]
-    },
-    {
-        "name": "\\App\\Module\\Core\\Controller\\Api\\ImageController",
-        "size": 3000,
-        "relations": [
-            "\\App\\Module\\Core\\Controller\\Api\\BaseController",
-            "\\App\\Module\\Core\\Model\\Image"
-        ]
-    },
-    {
-        "name": "\\App\\Module\\Core\\Controller\\Api\\BaseController",
-        "size": 3000,
-        "relations": []
-    },
-    {
-        "name": "\\App\\Module\\Core\\Model\\Image",
-        "size": 3000,
-        "relations": []
-    },
-    {
-        "name": "\\App\\Module\\Core\\Controller\\Api\\CountriesController",
-        "size": 3000,
-        "relations": [
-            "\\App\\Module\\Core\\Controller\\Api\\BaseController",
-            "\\App\\Module\\Core\\Model\\Region",
-            "\\App\\Module\\Core\\Model\\Country"
-        ]
-    },
-    {
-        "name": "\\App\\Module\\Core\\Model\\Region",
-        "size": 3000,
-        "relations": []
-    },
-    {
-        "name": "\\App\\Module\\Core\\Model\\Country",
-        "size": 3000,
-        "relations": []
-    },
-    {
-        "name": "\\App\\Module\\Core\\Controller\\Api\\IndexController",
-        "size": 3000,
-        "relations": [
-            "\\App\\Module\\Core\\Controller\\Api\\BaseController",
-            "\\App\\Module\\User\\Model\\User"
-        ]
-    },
-    {
-        "name": "\\App\\Module\\User\\Model\\User\\Token",
-        "size": 3000,
-        "relations": [
-            "\\App\\System\\Mvc\\Model"
-        ]
-    },
-    {
-        "name": "\\App\\Module\\Core\\Model\\Currency",
-        "size": 3000,
-        "relations": []
-    },
-    {
-        "name": "\\App\\Module\\Ad\\Entity\\Category",
-        "size": 3000,
-        "relations": [
-            "\\App\\System\\Mvc\\Model\\Entity"
-        ]
-    },
-    {
-        "name": "\\App\\Module\\Ad\\Entity\\Product",
-        "size": 3000,
-        "relations": [
-            "\\App\\System\\Mvc\\Model\\Entity"
-        ]
-    },
-    {
-        "name": "\\App\\Module\\Ad\\Entity\\Product\\Category",
-        "size": 3000,
-        "relations": [
-            "\\App\\System\\Mvc\\Model\\Entity"
-        ]
-    },
-    {
-        "name": "\\App\\Module\\Ad\\Controller\\Api\\Product\\CategoriesController",
-        "size": 3000,
-        "relations": [
-            "\\App\\Module\\Core\\Controller\\Api\\BaseController",
-            "\\App\\Module\\Ad\\Model\\Product\\Category"
-        ]
-    },
-    {
-        "name": "\\App\\Module\\Ad\\Model\\Product\\Category",
-        "size": 3000,
-        "relations": [
-            "\\App\\System\\Mvc\\Model",
-            "\\App\\System\\Pagination"
-        ]
-    },
-    {
-        "name": "\\App\\Module\\Ad\\Controller\\Api\\CategoriesController",
-        "size": 3000,
-        "relations": [
-            "\\App\\Module\\Core\\Controller\\Api\\BaseController",
-            "\\App\\Module\\Ad\\Model\\Category"
-        ]
-    },
-    {
-        "name": "\\App\\Module\\Ad\\Model\\Category",
-        "size": 3000,
-        "relations": [
-            "\\App\\System\\Mvc\\Model",
-            "\\App\\System\\Pagination"
-        ]
-    },
-    {
-        "name": "\\App\\Module\\Ad\\Controller\\Api\\ProductsController",
-        "size": 3000,
-        "relations": [
-            "\\App\\Module\\Core\\Controller\\Api\\BaseController",
-            "\\App\\Module\\Ad\\Model\\Product"
-        ]
-    },
-    {
-        "name": "\\App\\Module\\Ad\\Model\\Product",
-        "size": 3000,
-        "relations": [
-            "\\App\\System\\Mvc\\Model",
-            "\\App\\System\\Pagination"
-        ]
-    },
-    {
-        "name": "\\App\\Module\\User\\Entity\\User",
-        "size": 3000,
-        "relations": []
-    },
-    {
-        "name": "\\App\\Module\\User\\Entity\\User\\Card",
-        "size": 3000,
-        "relations": []
-    },
-    {
-        "name": "\\App\\Module\\User\\Entity\\User\\Login",
-        "size": 3000,
-        "relations": []
-    },
-    {
-        "name": "\\App\\Module\\User\\Entity\\User\\Group",
-        "size": 3000,
-        "relations": []
-    },
-    {
-        "name": "\\App\\Module\\User\\Entity\\User\\Token",
-        "size": 3000,
-        "relations": []
-    },
-    {
-        "name": "\\App\\Module\\User\\Entity\\User\\Group\\Permission",
-        "size": 3000,
-        "relations": []
-    },
-    {
-        "name": "\\App\\Module\\User\\Entity\\User\\Address",
-        "size": 3000,
-        "relations": []
-    },
-    {
-        "name": "\\App\\Module\\User\\Entity\\User\\History",
-        "size": 3000,
-        "relations": []
-    },
-    {
-        "name": "\\App\\Module\\User\\Entity\\User\\Profile",
-        "size": 3000,
-        "relations": []
-    },
-    {
-        "name": "\\App\\Module\\User\\Entity\\User\\PhoneNumber",
-        "size": 3000,
-        "relations": []
-    },
-    {
-        "name": "\\App\\Module\\User\\Controller\\Api\\StatusController",
-        "size": 3000,
-        "relations": [
-            "\\App\\Module\\Core\\Controller\\Api\\BaseController"
-        ]
-    },
-    {
-        "name": "\\App\\Module\\User\\Controller\\Api\\Card\\TypeController",
-        "size": 3000,
-        "relations": [
-            "\\App\\Module\\Core\\Controller\\Api\\BaseController"
-        ]
-    },
-    {
-        "name": "\\App\\Module\\User\\Controller\\Api\\GroupsController",
-        "size": 3000,
-        "relations": [
-            "\\App\\Module\\Core\\Controller\\Api\\BaseController",
-            "\\App\\Module\\User\\Model\\User\\Group",
-            "\\App\\System\\App",
-            "\\App\\Module\\User\\Model\\User\\Group\\Permission"
-        ]
-    },
-    {
-        "name": "\\App\\Module\\User\\Model\\User\\Group",
-        "size": 3000,
-        "relations": [
-            "\\App\\System\\Mvc\\Model"
-        ]
-    },
-    {
-        "name": "\\App\\Module\\User\\Model\\User\\Group\\Permission",
-        "size": 3000,
-        "relations": [
-            "\\App\\System\\Mvc\\Model"
-        ]
-    },
-    {
-        "name": "\\App\\Module\\User\\Controller\\Api\\DashboardController",
-        "size": 3000,
-        "relations": [
-            "\\App\\Module\\Core\\Controller\\Api\\BaseController",
-            "\\App\\Module\\User\\Model\\User"
-        ]
-    },
-    {
-        "name": "\\App\\Module\\User\\Controller\\Api\\AuthController",
-        "size": 3000,
-        "relations": [
-            "\\App\\Module\\Core\\Controller\\Api\\BaseController",
-            "\\App\\Module\\User\\Model\\User",
-            "\\App\\Module\\User\\Model\\User\\Token",
-            "\\App\\Module\\User\\Entity\\User\\Token",
-            "\\App\\Module\\User\\Model\\User\\Login",
-            "\\App\\Module\\User\\Entity\\User\\Login"
-        ]
-    },
-    {
-        "name": "\\App\\Module\\User\\Model\\User\\Login",
-        "size": 3000,
-        "relations": [
-            "\\App\\System\\Mvc\\Model"
-        ]
-    },
-    {
-        "name": "\\App\\Module\\User\\Controller\\Api\\ProfileController",
-        "size": 3000,
-        "relations": [
-            "\\App\\Module\\Core\\Controller\\Api\\BaseController",
-            "\\App\\System\\App",
-            "\\App\\Module\\User\\Entity\\User",
-            "\\App\\Module\\User\\Model\\User",
-            "\\App\\Module\\User\\Entity\\User\\Address",
-            "\\App\\Module\\User\\Model\\User\\Address",
-            "\\App\\Module\\User\\Entity\\User\\Profile",
-            "\\App\\Module\\User\\Model\\User\\Profile",
-            "\\App\\Module\\Core\\Entity\\Image",
-            "\\App\\Module\\Core\\Model\\Image"
-        ]
-    },
-    {
-        "name": "\\App\\Module\\User\\Model\\User\\Address",
-        "size": 3000,
-        "relations": [
-            "\\App\\System\\Mvc\\Model",
-            "\\App\\Module\\Core\\Model\\Region"
-        ]
-    },
-    {
-        "name": "\\App\\Module\\User\\Model\\User\\Profile",
-        "size": 3000,
-        "relations": [
-            "\\App\\System\\Mvc\\Model",
-            "\\App\\Module\\User\\Entity\\User\\Profile",
-            "\\App\\Module\\Core\\Model\\Image",
-            "\\App\\Module\\Core\\Model\\Country"
-        ]
-    },
-    {
-        "name": "\\App\\Module\\User\\Controller\\Api\\User\\CardController",
-        "size": 3000,
-        "relations": [
-            "\\App\\Module\\Core\\Controller\\Api\\BaseController",
-            "\\App\\System\\App",
-            "\\App\\Module\\User\\Entity\\User\\Card",
-            "\\App\\Module\\User\\Model\\User\\Card"
-        ]
-    },
-    {
-        "name": "\\App\\Module\\User\\Model\\User\\Card",
-        "size": 3000,
-        "relations": [
-            "\\App\\System\\Mvc\\Model",
-            "\\App\\Module\\User\\Entity\\User\\Card",
-            "\\App\\Module\\Core\\Model\\Image"
-        ]
-    },
-    {
-        "name": "\\App\\Module\\User\\Controller\\Api\\User\\GroupsController",
-        "size": 3000,
-        "relations": [
-            "\\App\\Module\\Core\\Controller\\Api\\BaseController",
-            "\\App\\Module\\User\\Model\\User\\Group",
-            "\\App\\System\\App",
-            "\\App\\Module\\User\\Entity\\User\\Group",
-            "\\App\\Module\\User\\Model\\User\\Group\\Permission",
-            "\\App\\Module\\User\\Entity\\User\\Group\\Permission"
-        ]
-    },
-    {
-        "name": "\\App\\Module\\User\\Controller\\Api\\User\\PhoneController",
-        "size": 3000,
-        "relations": [
-            "\\App\\Module\\Core\\Controller\\Api\\BaseController",
-            "\\App\\System\\App",
-            "\\App\\Module\\User\\Entity\\User\\PhoneNumber",
-            "\\App\\Module\\User\\Model\\User\\PhoneNumber"
-        ]
-    },
-    {
-        "name": "\\App\\Module\\User\\Model\\User\\PhoneNumber",
-        "size": 3000,
-        "relations": [
-            "\\App\\System\\Mvc\\Model"
-        ]
-    },
-    {
-        "name": "\\App\\Module\\User\\Model\\User\\History",
-        "size": 3000,
-        "relations": [
-            "\\App\\System\\Mvc\\Model",
-            "\\App\\Module\\User\\Entity\\User\\History"
-        ]
     }
 ];
 

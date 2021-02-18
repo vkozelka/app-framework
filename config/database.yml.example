@@ -1,15 +1,15 @@
 mysql:
   development:
+    driver: "mysql"
     host: ""
-    user: ""
+    database: ""
+    username: ""
     password: ""
-    dbname: ""
     charset: ""
-    driver: "pdo_mysql"
   production:
+    driver: "mysql"
     host: ""
-    user: ""
+    database: ""
+    username: ""
     password: ""
-    dbname: ""
     charset: ""
-    driver: "pdo_mysql"

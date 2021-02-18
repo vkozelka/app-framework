@@ -1,81 +1,84 @@
 <?php
+
 namespace App\System\Mvc\View\Helper;
 
 use App\System\App;
-use Symfony\Component\Routing\Generator\UrlGenerator;
+use App\System\Helper\StringHelper;
 use Symfony\Component\Validator\ConstraintViolation;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
-class Cms Extends \Twig_Extension {
+class Cms extends AbstractExtension
+{
 
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
-            new \Twig_Function('cmsUrl', [$this, 'url']),
-            new \Twig_Function('cmsTranslate', [$this, 'translate']),
-            new \Twig_Function('cmsBlock', [$this, 'block']),
-            new \Twig_Function('cmsDebug', [$this, 'debug']),
-            new \Twig_Function('cmsFormError', [$this, 'formError']),
-            new \Twig_Function('cmsUser', [$this, 'user']),
-            new \Twig_Function('cmsAdmin', [$this, 'admin']),
-            new \Twig_Function('cmsDate', [$this, 'date']),
-            new \Twig_Function('cmsTime', [$this, 'time']),
-            new \Twig_Function('cmsDateTime', [$this, 'datetime']),
-            new \Twig_Function('cmsReplace', [$this, 'replace']),
+            new TwigFunction('cmsUrl', [$this, 'url']),
+            new TwigFunction('cmsTranslate', [$this, 'translate']),
+            new TwigFunction('cmsBlock', [$this, 'block']),
+            new TwigFunction('cmsDebug', [$this, 'debug']),
+            new TwigFunction('cmsFormError', [$this, 'formError']),
+            new TwigFunction('cmsDate', [$this, 'date']),
+            new TwigFunction('cmsTime', [$this, 'time']),
+            new TwigFunction('cmsDateTime', [$this, 'datetime']),
+            new TwigFunction('cmsReplace', [$this, 'replace']),
         ];
     }
 
-    public function url($name, array $parameters = []) {
-        return App::get()->getUrl()->generate($name, $parameters);
+    protected function url($name, array $parameters = []) : string
+    {
+        return App::get()->url->generate($name, $parameters);
     }
 
-    public function user() {
-        return App::get()->getUser();
-    }
-
-    public function admin() {
-        return App::get()->getAdmin();
-    }
-
-    public function replace($subject, $pattern, $replace)
+    protected function replace($subject, $pattern, $replace): string
     {
         return preg_replace($pattern, $replace, $subject);
     }
 
-    public function date($timestamp = null,$format = "d.m.Y")
+    protected function date($timestamp = null, $format = "d.m.Y"): string
     {
         return date($format, is_numeric($timestamp) ? $timestamp : strtotime($timestamp));
     }
 
-    public function time($timestamp = null,$format = "H:i:s")
+    protected function time($timestamp = null, $format = "H:i:s"): string
     {
         return date($format, is_numeric($timestamp) ? $timestamp : strtotime($timestamp));
     }
 
-    public function datetime($timestamp = null,$format = "d.m.Y H:i:s")
+    protected function datetime($timestamp = null, $format = "d.m.Y H:i:s"): string
     {
         return date($format, is_numeric($timestamp) ? $timestamp : strtotime($timestamp));
     }
 
-    public function translate($id, array $parameters = [], $domain = null, $locale = null) {
-        return App::get()->getTranslator()->trans($id, $parameters, $domain, $locale);
+    protected function translate($id, array $parameters = [], $domain = null, $locale = null): string
+    {
+        return App::get()->translator->trans($id, $parameters, $domain, $locale);
     }
 
-    public function formError(ConstraintViolation $error) {
-        if ($error->getPlural()) {
-            return App::get()->getTranslator()->transChoice($error->getMessageTemplate(),$error->getPlural(),$error->getParameters());
-        }
-        return App::get()->getTranslator()->trans($error->getMessageTemplate(),$error->getParameters());
+    protected function formError(ConstraintViolation $error): string
+    {
+        return App::get()->translator->trans($error->getMessageTemplate(), $error->getParameters());
     }
 
-    public function block($name, array $options = []) {
-        list($module, $block) = explode("/",$name);
-        $module = str_replace(" ", "", ucwords(str_replace("_", " ", $module)));
-        $block = str_replace(" ", "\\", ucwords(str_replace(".", " ", $block))) . "Block";
-        $section = str_replace(" ", "\\", ucwords(str_replace(".", " ", App::get()->getSection())));
-        $blockClass = "\\App\\Module\\" . $module . "\\Block\\" . ($section?($section."\\"):"") . $block;
+    /**
+     * @param $name
+     * @param array $options
+     * @return mixed
+     * @throws App\Exception\BlockNotFoundException
+     */
+    protected function block($name, array $options = [])
+    {
+        list($module, $block) = explode("/", $name);
+        $module = StringHelper::kebabToCamelCase($module);
+        $block = StringHelper::stringToClass($block) . "Block";
+        $section = App::di()->section;
 
-        if (!file_exists(CMS_DIR_APP_MODULE . DS . $module . DS . "Block" . ($section ? (DS.$section):"") . DS . $block . ".php")) {
-            throw new App\BlockNotFoundException("Block " . $block . " not found");
+        $blockClass = $this->getFullBlockClass($module, $section, $block);
+        $blockFile = $this->getFullBlockPath($module, $section, $block);
+
+        if (!file_exists($blockFile)) {
+            throw new App\Exception\BlockNotFoundException("Block " . $blockClass . " not found");
         }
 
         $blockInstance = new $blockClass($options);
@@ -86,12 +89,43 @@ class Cms Extends \Twig_Extension {
         return $blockInstance;
     }
 
-    public function debug($var) {
+    public function debug($var)
+    {
         ob_start();
         var_dump($var);
         $c = ob_get_contents();
         ob_end_clean();
         return $c;
+    }
+
+    private function getFullBlockPath(string $module, string $section, string $block): string
+    {
+        $parts = [
+            "dir" => CMS_DIR_APP_MODULE,
+            "module" => $module,
+            "folder" => "block",
+            "section" => $section,
+            "file" => $block.".php"
+        ];
+        if (empty($parts["section"])) {
+            unset($parts["section"]);
+        }
+        return implode(DS, array_values($parts));
+    }
+
+    private function getFullBlockClass(string $module, string $section, string $block): string
+    {
+        $parts = [
+            "namespace" => "\\App\\Module",
+            "module" => $module,
+            "folder" => "Block",
+            "section" => $section,
+            "block" => $block
+        ];
+        if (empty($parts["section"])) {
+            unset($parts["section"]);
+        }
+        return implode("\\", array_values($parts));
     }
 
 }

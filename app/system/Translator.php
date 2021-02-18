@@ -2,56 +2,49 @@
 
 namespace App\System;
 
-use App\System\View\Engine\Twig;
-use Symfony\Component\Templating\Loader\FilesystemLoader;
-use Symfony\Component\Templating\PhpEngine;
-use Symfony\Component\Templating\TemplateNameParser;
+use DirectoryIterator;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Symfony\Component\Translation\Loader\YamlFileLoader;
+use Symfony\Component\Translation\Translator as BaseTranslator;
 
 class Translator
 {
 
-    private $__translator;
+    private BaseTranslator $translator;
 
     public function __construct()
     {
-        App::get()->getProfiler()->start("App::Translator");
-        $this->__translator = new \Symfony\Component\Translation\Translator(App::get()->getLocale());
-        $this->__translator->addLoader("yaml", new YamlFileLoader());
-        $this->__translator->addLoader("xlf", new XliffFileLoader());
-        foreach ($this->__loadAvailableTranslations() as $lang => $file) {
-            $this->__translator->addResource("yaml", $file, $lang);
-            $this->__translator->addResource("xlf",CMS_DIR_VENDOR.DS."symfony".DS."validator".DS."Resources".DS."translations".DS."validators.".$lang.".xlf", $lang);
+        App::get()->profiler->start("App::Translator");
+        $this->translator = new BaseTranslator(App::di()->locale);
+        $this->translator->addLoader("yaml", new YamlFileLoader());
+        $this->translator->addLoader("xlf", new XliffFileLoader());
+        foreach ($this->loadAvailableTranslations() as $lang => $file) {
+            $this->translator->addResource("yaml", $file, $lang);
+            $this->translator->addResource("xlf",CMS_DIR_VENDOR.DS."symfony".DS."validator".DS."Resources".DS."translations".DS."validators.".$lang.".xlf", $lang);
         }
-        App::get()->getProfiler()->stop("App::Translator");
+        App::get()->profiler->stop("App::Translator");
     }
 
-    public function getTranslator() {
-        return $this->__translator;
+    public function getTranslator(): BaseTranslator {
+        return $this->translator;
     }
 
-    public function trans($id, array $parameters = [], $domain = null, $locale = null)
+    public function trans($id, array $parameters = [], $domain = null, $locale = null): string
     {
         return $this->getTranslator()->trans($id, $parameters, $domain, $locale);
     }
 
-    public function transChoice($id, $number, array $parameters = [], $domain = null, $locale = null)
-    {
-        return $this->getTranslator()->transChoice($id, $number, $parameters, $domain, $locale);
-    }
-
-    private function __loadAvailableTranslations() {
-        App::get()->getProfiler()->start("App::Translator::LoadTranslations");
-        $langs = [];
-        $dir = new \DirectoryIterator(CMS_DIR_APP_LANGUAGE);
+    private function loadAvailableTranslations(): array {
+        App::get()->profiler->start("App::Translator::LoadTranslations");
+        $languages = [];
+        $dir = new DirectoryIterator(CMS_DIR_APP_LANGUAGE);
         foreach ($dir as $file) {
             if ($file->isFile() && "yml" === $file->getExtension()) {
-                $langs[strtok($file->getFilename(),".")] = $file->getPath().DS.$file->getFilename();
+                $languages[strtok($file->getFilename(),".")] = $file->getPath().DS.$file->getFilename();
             }
         }
-        App::get()->getProfiler()->stop("App::Translator::LoadTranslations");
-        return $langs;
+        App::get()->profiler->stop("App::Translator::LoadTranslations");
+        return $languages;
     }
 
 }

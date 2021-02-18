@@ -5,53 +5,55 @@ namespace App\System\Mvc\View\Engine;
 use App\System\App;
 use App\System\Mvc\View\Helper\Cms;
 use Symfony\Component\Templating\EngineInterface;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 
 class Twig implements EngineInterface
 {
 
     /**
-     * @var \Twig_Environment
+     * @var Environment
      */
-    private $__twig;
+    private $twig;
 
     public function __construct($section = null)
     {
         if ($section) {
-            $loader = new \Twig_Loader_Filesystem(CMS_DIR_APP_VIEW.DS.$section);
+            $loader = new FilesystemLoader(CMS_DIR_APP_VIEW.DS.$section);
         } else {
-            $loader = new \Twig_Loader_Filesystem(CMS_DIR_APP_VIEW);
+            $loader = new FilesystemLoader(CMS_DIR_APP_VIEW);
         }
-        $this->__twig = new \Twig_Environment($loader,[
-            "debug" => "development" === App::get()->getEnvironment(),
+        $this->twig = new Environment($loader,[
+            "debug" => "development" === App::di()->environment,
             "charset" => "utf-8",
             "cache" => CMS_DIR_VAR_CACHE,
-            "auto_reload" => "development" === App::get()->getEnvironment(),
-            "strict_variables" => "development" !== App::get()->getEnvironment(),
+            "auto_reload" => "development" === App::di()->environment,
+            "strict_variables" => "development" !== App::di()->environment,
         ]);
-        $this->__twig->addExtension(new Cms());
-        $this->__twig->addGlobal("cms", App::get());
+        $this->twig->addExtension(new Cms());
+        $this->twig->addGlobal("di", App::di());
     }
 
-    public function render($name, array $parameters = [])
+    public function render($name, array $parameters = []) : string
     {
-        return $this->__twig->render($name, $parameters);
+        return $this->getTwig()->render($name, $parameters);
     }
 
-    public function exists($name)
+    public function exists($name) : bool
     {
-        return $this->__twig->getLoader()->exists($name);
+        return $this->getTwig()->getLoader()->exists($name);
     }
 
-    public function supports($name)
+    public function supports($name) : bool
     {
         return true;
     }
 
     /**
-     * @return \Twig_Environment
+     * @return Environment
      */
     public function getTwig() {
-        return $this->__twig;
+        return $this->twig;
     }
 
 }

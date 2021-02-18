@@ -1,0 +1,16 @@
+mailer:
+  system_address: ""
+  development:
+    adapter: "smtp"
+    host: ""
+    port: ""
+    username: ""
+    password: ""
+    ssl: ""
+  production:
+    adapter: "smtp"
+    host: ""
+    port: ""
+    username: ""
+    password: ""
+    ssl: ""

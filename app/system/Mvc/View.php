@@ -4,45 +4,40 @@ namespace App\System\Mvc;
 
 use App\System\App;
 use App\System\Mvc\View\Engine\Twig;
+use Twig\Environment;
 
 class View
 {
 
-    /**
-     * @var Twig
-     */
-    private $__engine;
+    private Twig $engine;
 
-    private $__data = [];
+    private array $data = [];
 
     public function __construct(string $section = null)
     {
-        $this->__engine = new Twig($section);
+        $this->engine = new Twig($section);
     }
 
-    public function render(string $name, array $data = []) {
-        App::get()->getProfiler()->start("App::View::Render::".$name);
+    public function render(string $name, array $data = []): string {
+        App::get()->profiler->start("App::View::Render::".$name);
         if ($data) {
             $this->setVars($data);
         }
-        $result = $this->__engine->render($name.".twig", $this->__data);
-        App::get()->getProfiler()->stop("App::View::Render::".$name);
+        $result = $this->getEngine()->render($name.".twig", $this->data);
+        App::get()->profiler->stop("App::View::Render::".$name);
         return $result;
     }
 
-    public function setVars(array $data = []) {
-        $this->__data = $data;
+    public function setVars(array $data = []): void {
+        $this->data = $data;
     }
 
-    public function setVar(string $variable, $value = null) {
-        $this->__data[$variable] = $value;
+    public function setVar(string $variable, $value = null): void {
+        $this->data[$variable] = $value;
     }
 
-    /**
-     * @return \Twig_Environment
-     */
-    public function getEngine() {
-        return $this->__engine->getTwig();
+    public function getEngine(): Environment {
+        return $this->engine->getTwig();
     }
 
 }
